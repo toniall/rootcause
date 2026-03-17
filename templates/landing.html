@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRYKR // Offensive Security Knowledge Base</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap');
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#050810;--bg2:#0a0f1c;--bg3:#111a2e;
+      --cyan:#00f0ff;--red:#ff3358;--green:#00ff88;--amber:#ffaa00;--purple:#b44dff;
+      --text:#dce3f0;--dim:#6b7a96;--muted:#334155;
+      --mono:'JetBrains Mono',monospace;
+      --display:'Outfit',sans-serif;
+      --serif:'Crimson Pro',Georgia,serif;
+    }
+    html{background:var(--bg);color:var(--text);font-size:16px;scroll-behavior:smooth}
+    body{font-family:var(--display);overflow-x:hidden}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:#1e293b;border-radius:3px}
+
+    /* ═══════ HERO ═══════ */
+    .hero{
+      min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      position:relative;overflow:hidden;padding:2rem;
+    }
+
+    /* Grid background */
+    .hero::before{
+      content:'';position:absolute;inset:0;
+      background:
+        linear-gradient(90deg,#00f0ff05 1px,transparent 1px),
+        linear-gradient(180deg,#00f0ff05 1px,transparent 1px);
+      background-size:60px 60px;
+      mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,black 20%,transparent 70%);
+    }
+
+    /* Radial glow */
+    .hero::after{
+      content:'';position:absolute;
+      width:800px;height:800px;border-radius:50%;
+      background:radial-gradient(circle,#00f0ff08 0%,transparent 70%);
+      top:50%;left:50%;transform:translate(-50%,-50%);
+      animation:breathe 6s ease-in-out infinite;
+    }
+    @keyframes breathe{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}}
+
+    .hero-content{position:relative;z-index:2;text-align:center;max-width:900px}
+
+    /* Status line */
+    .status{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 16px;border-radius:100px;
+      background:#00ff8810;border:1px solid #00ff8830;
+      font-family:var(--mono);font-size:.7rem;letter-spacing:1.5px;
+      color:var(--green);text-transform:uppercase;
+      margin-bottom:2.5rem;
+      animation:fadeInDown .8s ease-out both;
+    }
+    .status-dot{
+      width:6px;height:6px;border-radius:50%;background:var(--green);
+      box-shadow:0 0 8px var(--green);animation:blink 2s ease-in-out infinite;
+    }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    @keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    .hero-title{
+      font-family:var(--mono);font-weight:800;font-size:clamp(3.5rem,8vw,7rem);
+      letter-spacing:8px;color:var(--cyan);line-height:1;
+      text-shadow:0 0 40px #00f0ff33,0 0 80px #00f0ff11;
+      margin-bottom:1.5rem;
+      animation:fadeInUp .8s ease-out .2s both;
+    }
+    .hero-sub{
+      font-family:var(--display);font-weight:300;font-size:clamp(1.1rem,2.5vw,1.5rem);
+      color:var(--dim);letter-spacing:3px;text-transform:uppercase;
+      margin-bottom:3rem;
+      animation:fadeInUp .8s ease-out .4s both;
+    }
+
+    /* Divider line */
+    .hero-line{
+      width:120px;height:1px;margin:0 auto 3rem;
+      background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+      animation:fadeIn 1s ease-out .6s both;
+    }
+
+    .hero-desc{
+      font-family:var(--serif);font-weight:300;font-size:1.2rem;
+      line-height:1.8;color:#8899b4;max-width:640px;margin:0 auto 3.5rem;
+      font-style:italic;
+      animation:fadeInUp .8s ease-out .7s both;
+    }
+
+    /* ═══════ COUNTER STRIP ═══════ */
+    .counters{
+      display:flex;gap:1px;justify-content:center;flex-wrap:wrap;
+      margin-bottom:3.5rem;
+      animation:fadeInUp .8s ease-out .9s both;
+    }
+    .counter{
+      background:var(--bg2);padding:1.5rem 2.5rem;text-align:center;
+      position:relative;
+    }
+    .counter:first-child{border-radius:12px 0 0 12px}
+    .counter:last-child{border-radius:0 12px 12px 0}
+    .counter::after{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    }
+    .counter:nth-child(1)::after{background:var(--cyan)}
+    .counter:nth-child(2)::after{background:var(--red)}
+    .counter:nth-child(3)::after{background:var(--green)}
+    .counter:nth-child(4)::after{background:var(--amber)}
+    .counter:nth-child(5)::after{background:var(--purple)}
+    .counter-val{
+      font-family:var(--mono);font-weight:700;font-size:2rem;
+      display:block;margin-bottom:.25rem;
+    }
+    .counter:nth-child(1) .counter-val{color:var(--cyan)}
+    .counter:nth-child(2) .counter-val{color:var(--red)}
+    .counter:nth-child(3) .counter-val{color:var(--green)}
+    .counter:nth-child(4) .counter-val{color:var(--amber)}
+    .counter:nth-child(5) .counter-val{color:var(--purple)}
+    .counter-label{
+      font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--dim);
+    }
+
+    /* CTA */
+    .cta{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:16px 44px;border-radius:8px;
+      background:linear-gradient(135deg,var(--cyan),#0090ff);
+      color:#050810;font-family:var(--mono);font-weight:700;
+      font-size:.9rem;letter-spacing:2px;text-transform:uppercase;
+      text-decoration:none;
+      transition:all .3s;position:relative;overflow:hidden;
+      box-shadow:0 0 30px #00f0ff22;
+      animation:fadeInUp .8s ease-out 1.1s both;
+    }
+    .cta:hover{
+      transform:translateY(-3px);
+      box-shadow:0 8px 40px #00f0ff44;
+    }
+    .cta::after{
+      content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+      background:linear-gradient(transparent,rgba(255,255,255,.1),transparent);
+      transform:rotate(45deg);transition:all .5s;
+    }
+    .cta:hover::after{left:100%}
+    .cta svg{width:18px;height:18px;fill:currentColor}
+
+    /* ═══════ FEATURES SECTION ═══════ */
+    .features{
+      padding:6rem 2rem;max-width:1200px;margin:0 auto;
+      position:relative;
+    }
+    .features::before{
+      content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+      width:1px;height:60px;background:linear-gradient(180deg,var(--cyan),transparent);
+    }
+
+    .section-label{
+      text-align:center;font-family:var(--mono);font-size:.7rem;
+      letter-spacing:3px;text-transform:uppercase;color:var(--cyan);
+      margin-bottom:1rem;
+    }
+    .section-title{
+      text-align:center;font-weight:700;font-size:clamp(1.8rem,4vw,2.8rem);
+      margin-bottom:1rem;letter-spacing:-0.5px;
+    }
+    .section-sub{
+      text-align:center;font-family:var(--serif);font-style:italic;
+      color:var(--dim);font-size:1.1rem;max-width:550px;margin:0 auto 4rem;
+    }
+
+    .feat-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+    }
+    .feat-card{
+      background:var(--bg2);border:1px solid #1a2540;border-radius:14px;
+      padding:2rem;position:relative;overflow:hidden;
+      transition:all .4s;
+    }
+    .feat-card:hover{
+      border-color:#2a3a5a;transform:translateY(-4px);
+      box-shadow:0 12px 40px #00000044;
+    }
+    .feat-icon{
+      width:48px;height:48px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.3rem;margin-bottom:1.25rem;
+    }
+    .feat-card:nth-child(1) .feat-icon{background:#00f0ff12;color:var(--cyan)}
+    .feat-card:nth-child(2) .feat-icon{background:#ff335812;color:var(--red)}
+    .feat-card:nth-child(3) .feat-icon{background:#00ff8812;color:var(--green)}
+    .feat-card:nth-child(4) .feat-icon{background:#ffaa0012;color:var(--amber)}
+    .feat-card:nth-child(5) .feat-icon{background:#b44dff12;color:var(--purple)}
+    .feat-card:nth-child(6) .feat-icon{background:#38bdf812;color:#38bdf8}
+
+    .feat-title{font-weight:700;font-size:1.1rem;margin-bottom:.5rem}
+    .feat-desc{color:var(--dim);font-size:.88rem;line-height:1.65}
+
+    .feat-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:.5;
+    }
+    .feat-card:nth-child(1)::before{background:linear-gradient(90deg,var(--cyan),transparent)}
+    .feat-card:nth-child(2)::before{background:linear-gradient(90deg,var(--red),transparent)}
+    .feat-card:nth-child(3)::before{background:linear-gradient(90deg,var(--green),transparent)}
+    .feat-card:nth-child(4)::before{background:linear-gradient(90deg,var(--amber),transparent)}
+    .feat-card:nth-child(5)::before{background:linear-gradient(90deg,var(--purple),transparent)}
+    .feat-card:nth-child(6)::before{background:linear-gradient(90deg,#38bdf8,transparent)}
+
+    /* ═══════ DATA PREVIEW SECTION ═══════ */
+    .preview{
+      padding:6rem 2rem;background:var(--bg2);
+      border-top:1px solid #1a2540;border-bottom:1px solid #1a2540;
+    }
+    .preview-inner{max-width:1200px;margin:0 auto}
+    .preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+    .preview-card{
+      background:var(--bg);border:1px solid #1a2540;border-radius:14px;
+      padding:1.75rem;overflow:hidden;
+    }
+    .preview-card h4{
+      font-family:var(--mono);font-size:.7rem;letter-spacing:2px;
+      text-transform:uppercase;color:var(--dim);margin-bottom:1rem;
+    }
+    .preview-row{
+      display:flex;align-items:center;gap:.75rem;
+      padding:.55rem 0;border-bottom:1px solid #111a2e;
+      font-size:.82rem;
+    }
+    .preview-row:last-child{border-bottom:none}
+    .preview-rank{
+      font-family:var(--mono);font-size:.7rem;color:var(--muted);
+      width:20px;text-align:right;flex-shrink:0;
+    }
+    .preview-bar{flex:1;height:6px;background:#111a2e;border-radius:3px;overflow:hidden}
+    .preview-fill{height:100%;border-radius:3px;transition:width 1.5s ease-out}
+    .preview-label{flex:1;color:var(--text)}
+    .preview-val{font-family:var(--mono);font-size:.78rem;flex-shrink:0}
+
+    /* ═══════ BOTTOM CTA ═══════ */
+    .bottom-cta{
+      padding:8rem 2rem;text-align:center;position:relative;
+    }
+    .bottom-cta::before{
+      content:'';position:absolute;
+      width:600px;height:600px;border-radius:50%;
+      background:radial-gradient(circle,#00f0ff06 0%,transparent 70%);
+      top:50%;left:50%;transform:translate(-50%,-50%);
+    }
+    .bottom-cta .hero-title{font-size:clamp(2rem,5vw,3.5rem);margin-bottom:1rem}
+    .bottom-cta .hero-sub{margin-bottom:2.5rem}
+
+    /* ═══════ FOOTER ═══════ */
+    .landing-footer{
+      padding:2rem;text-align:center;font-size:.7rem;
+      color:var(--muted);letter-spacing:1px;
+      border-top:1px solid #111a2e;
+    }
+
+    /* Scroll reveal */
+    .reveal{opacity:0;transform:translateY(30px);transition:all .8s ease-out}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* Responsive */
+    @media(max-width:900px){
+      .feat-grid{grid-template-columns:1fr}
+      .preview-grid{grid-template-columns:1fr}
+      .counters{flex-direction:column;align-items:center}
+      .counter{border-radius:0!important;width:260px}
+      .counter:first-child{border-radius:12px 12px 0 0!important}
+      .counter:last-child{border-radius:0 0 12px 12px!important}
+    }
+
+    /* Scanline */
+    body::after{
+      content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+      pointer-events:none;z-index:9999;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,#00f0ff02 2px,#00f0ff02 4px);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="status"><span class="status-dot"></span> System Online</div>
+    <h1 class="hero-title">STRYKR</h1>
+    <p class="hero-sub">Offensive Security Knowledge Base</p>
+    <div class="hero-line"></div>
+    <p class="hero-desc">
+      A unified intelligence platform built from HackTheBox machine writeups and
+      disclosed HackerOne vulnerability reports. Search attack patterns, browse exploit scripts,
+      and study real-world security findings in one place.
+    </p>
+
+    <div class="counters">
+      <div class="counter">
+        <span class="counter-val" id="c-boxes">...</span>
+        <span class="counter-label">HTB Machines</span>
+      </div>
+      <div class="counter">
+        <span class="counter-val" id="c-reports">...</span>
+        <span class="counter-label">H1 Reports</span>
+      </div>
+      <div class="counter">
+        <span class="counter-val" id="c-scripts">...</span>
+        <span class="counter-label">Exploit Scripts</span>
+      </div>
+      <div class="counter">
+        <span class="counter-val" id="c-commands">...</span>
+        <span class="counter-label">Commands</span>
+      </div>
+      <div class="counter">
+        <span class="counter-val" id="c-bounty">...</span>
+        <span class="counter-label">Bounties Paid ($)</span>
+      </div>
+    </div>
+
+    <a href="/dashboard" class="cta">
+      Enter Knowledge Base
+      <svg viewBox="0 0 24 24"><path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-10.975z"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════ FEATURES ═══════════ -->
+<section class="features">
+  <div class="reveal">
+    <div class="section-label">What's Inside</div>
+    <h2 class="section-title">Built for Offensive Security</h2>
+    <p class="section-sub">Every data point extracted, normalized, and indexed for rapid lookup.</p>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feat-card reveal">
+      <div class="feat-icon">&#9881;</div>
+      <div class="feat-title">HTB Machines</div>
+      <div class="feat-desc">Full writeup data for every box: OS, difficulty, ports, services, tools used, CVEs, Metasploit modules, and complete attack chains from enumeration to root.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">&#9888;</div>
+      <div class="feat-title">HackerOne Reports</div>
+      <div class="feat-desc">Disclosed vulnerability reports with weakness classifications, affected programs, asset details, CVE mappings, and bounty data.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">&#8227;</div>
+      <div class="feat-title">Exploit Scripts</div>
+      <div class="feat-desc">Inline and standalone scripts across 14 categories: reverse shells, privilege escalation, credential extraction, deserialization, brute force, and more.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">&#9670;</div>
+      <div class="feat-title">29 Attack Archetypes</div>
+      <div class="feat-desc">Recurring attack patterns distilled from hundreds of boxes. Know which tools, ports, and escalation paths are most common for each OS and foothold type.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">&#8853;</div>
+      <div class="feat-title">Full-Text Search</div>
+      <div class="feat-desc">FTS5-powered search across boxes, vulnerability reports, and script source code. Find anything by keyword, CVE, tool name, or technique.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">&#9783;</div>
+      <div class="feat-title">Live API Backend</div>
+      <div class="feat-desc">18 REST endpoints powered by Flask + SQLite3. Paginated queries, filter by OS, difficulty, weakness type, program, language. Real-time data, not static snapshots.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DATA PREVIEW ═══════════ -->
+<section class="preview">
+  <div class="preview-inner">
+    <div class="reveal">
+      <div class="section-label">Data At a Glance</div>
+      <h2 class="section-title">What the Numbers Say</h2>
+      <p class="section-sub">Top vectors, tools, and vulnerability patterns extracted from real-world engagements.</p>
+    </div>
+
+    <div class="preview-grid reveal">
+      <div class="preview-card">
+        <h4>Top Foothold Vectors</h4>
+        <div id="preview-foothold"></div>
+      </div>
+      <div class="preview-card">
+        <h4>Top Privilege Escalation</h4>
+        <div id="preview-privesc"></div>
+      </div>
+      <div class="preview-card">
+        <h4>Top HackerOne Weakness Types</h4>
+        <div id="preview-weakness"></div>
+      </div>
+      <div class="preview-card">
+        <h4>Most Used Pentest Tools</h4>
+        <div id="preview-tools"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ BOTTOM CTA ═══════════ -->
+<section class="bottom-cta">
+  <div class="reveal">
+    <h2 class="hero-title" style="animation:none;opacity:1">Ready to Explore?</h2>
+    <p class="hero-sub" style="animation:none;opacity:1">Charts. Tables. Full-text search. Every data point at your fingertips.</p>
+    <a href="/dashboard" class="cta" style="animation:none;opacity:1">
+      Launch Dashboard
+      <svg viewBox="0 0 24 24"><path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-10.975z"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer class="landing-footer" id="landing-footer">
+  STRYKR KNOWLEDGE BASE &mdash; FLASK + SQLITE3
+</footer>
+
+<script>
+// ── Counter animation (loads from API) ──
+function animateCounter(el, target, isMoney) {
+  const duration = 2000;
+  const start = performance.now();
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(target * eased);
+    el.textContent = isMoney ? '$' + current.toLocaleString() : current.toLocaleString();
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+async function loadCounters() {
+  try {
+    const stats = await fetch('/api/stats').then(r => r.json());
+    const map = {
+      'c-boxes': stats.htb_boxes,
+      'c-reports': stats.h1_reports,
+      'c-scripts': stats.script_files + stats.inline_scripts,
+      'c-commands': stats.commands,
+      'c-bounty': Math.round(stats.total_bounty),
+    };
+    // Wait for hero to be visible before animating
+    const heroObs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        for (const [id, val] of Object.entries(map)) {
+          animateCounter(document.getElementById(id), val, id === 'c-bounty');
+        }
+        heroObs.disconnect();
+      }
+    }, { threshold: 0.3 });
+    heroObs.observe(document.querySelector('.hero'));
+  } catch (e) {
+    console.log('Stats unavailable:', e);
+  }
+}
+loadCounters();
+
+// ── Scroll reveal ──
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── Load preview data from API ──
+async function loadPreviews() {
+  try {
+    const [foothold, privesc, weakness, tools] = await Promise.all([
+      fetch('/api/charts/foothold_types').then(r => r.json()),
+      fetch('/api/charts/privesc_types').then(r => r.json()),
+      fetch('/api/charts/h1_weaknesses').then(r => r.json()),
+      fetch('/api/charts/top_tools').then(r => r.json()),
+    ]);
+
+    const colors = ['#00f0ff','#ff3358','#00ff88','#ffaa00','#b44dff','#38bdf8','#f472b6'];
+
+    function renderPreview(id, data, key, valKey, max7) {
+      const items = (max7 ? data.slice(0, 7) : data.slice(0, 7));
+      const maxVal = Math.max(...items.map(d => d[valKey]));
+      document.getElementById(id).innerHTML = items.map((d, i) => `
+        <div class="preview-row">
+          <span class="preview-rank">${i + 1}</span>
+          <span class="preview-label">${d[key].replace(/_/g, ' ')}</span>
+          <div class="preview-bar"><div class="preview-fill" style="width:${(d[valKey]/maxVal*100).toFixed(0)}%;background:${colors[i % colors.length]}"></div></div>
+          <span class="preview-val" style="color:${colors[i % colors.length]}">${d[valKey]}</span>
+        </div>
+      `).join('');
+    }
+
+    renderPreview('preview-foothold', foothold, 'type', 'count');
+    renderPreview('preview-privesc', privesc, 'type', 'count');
+    renderPreview('preview-weakness', weakness, 'weakness_name', 'count');
+    renderPreview('preview-tools', tools, 'tool', 'count');
+  } catch (e) {
+    console.log('Preview data unavailable:', e);
+  }
+}
+loadPreviews();
+</script>
+</body>
+</html>

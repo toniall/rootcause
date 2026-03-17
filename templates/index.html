@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRYKR // Knowledge Base</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      <div>
+        <div class="logo-mark">STRYKR</div>
+        <div class="logo-sub">Offensive Security Knowledge Base</div>
+      </div>
+    </div>
+
+    <div class="global-search">
+      <span class="gs-icon">&#128269;</span>
+      <input id="gs-input" placeholder="Search everything..." autocomplete="off">
+      <div class="gs-results" id="gs-results"></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="htb">HTB Boxes</button>
+      <button class="tab" data-tab="hackerone">HackerOne</button>
+      <button class="tab" data-tab="scripts">Scripts</button>
+      <button class="tab" data-tab="archetypes">Archetypes</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ══════════ OVERVIEW ══════════ -->
+  <div class="panel active" id="panel-overview">
+    <div class="grid g4 mb" id="stat-cards">
+      <div class="loading"><div class="spinner"></div><div>Loading stats...</div></div>
+    </div>
+    <div class="grid g2 mb">
+      <div class="chart-card"><h3>Foothold Vectors</h3><div class="chart-wrap"><canvas id="chart-foothold"></canvas></div></div>
+      <div class="chart-card"><h3>Privilege Escalation Types</h3><div class="chart-wrap"><canvas id="chart-privesc"></canvas></div></div>
+    </div>
+    <div class="grid g3 mb">
+      <div class="chart-card"><h3>OS Distribution</h3><div class="chart-wrap"><canvas id="chart-os"></canvas></div></div>
+      <div class="chart-card"><h3>Difficulty Spread</h3><div class="chart-wrap"><canvas id="chart-diff"></canvas></div></div>
+      <div class="chart-card"><h3>Top Pentest Tools</h3><div class="chart-wrap"><canvas id="chart-tools"></canvas></div></div>
+    </div>
+    <div class="grid g2">
+      <div class="chart-card"><h3>HackerOne // Top Weakness Types</h3><div class="chart-wrap tall"><canvas id="chart-h1weak"></canvas></div></div>
+      <div class="chart-card"><h3>HackerOne // Bounty Distribution</h3><div class="chart-wrap tall"><canvas id="chart-bounty"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- ══════════ HTB BOXES ══════════ -->
+  <div class="panel" id="panel-htb">
+    <div class="search-bar">
+      <div class="search-group">
+        <span class="s-icon">&#128269;</span>
+        <input class="s-input" id="htb-search" placeholder="Search boxes by name, tool, CVE, technique...">
+      </div>
+      <select class="f-select" id="htb-os">
+        <option value="">All OS</option>
+        <option value="Linux">Linux</option>
+        <option value="Windows">Windows</option>
+        <option value="FreeBSD">FreeBSD</option>
+      </select>
+      <select class="f-select" id="htb-diff">
+        <option value="">All Difficulty</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+        <option value="Insane">Insane</option>
+      </select>
+    </div>
+    <div class="result-count" id="htb-count"></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Box</th><th>OS</th><th>Difficulty</th>
+          <th>Foothold</th><th>Privesc</th><th>Tools</th><th>Ports</th>
+        </tr></thead>
+        <tbody id="htb-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="htb-pagination"></div>
+  </div>
+
+  <!-- ══════════ HACKERONE ══════════ -->
+  <div class="panel" id="panel-hackerone">
+    <div class="search-bar">
+      <div class="search-group">
+        <span class="s-icon">&#128269;</span>
+        <input class="s-input" id="h1-search" placeholder="Search reports by title, weakness, program, CVE...">
+      </div>
+      <select class="f-select" id="h1-prog"><option value="">All Programs</option></select>
+      <select class="f-select" id="h1-weak"><option value="">All Weaknesses</option></select>
+    </div>
+    <div class="result-count" id="h1-count"></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>ID</th><th>Title</th><th>Weakness</th><th>Program</th><th>Bounty</th>
+        </tr></thead>
+        <tbody id="h1-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="h1-pagination"></div>
+  </div>
+
+  <!-- ══════════ SCRIPTS ══════════ -->
+  <div class="panel" id="panel-scripts">
+    <div class="grid g2 mb">
+      <div class="chart-card"><h3>Script Categories</h3><div class="chart-wrap"><canvas id="chart-scriptcats"></canvas></div></div>
+      <div class="chart-card"><h3>Top Services on HTB</h3><div class="chart-wrap"><canvas id="chart-services"></canvas></div></div>
+    </div>
+    <div class="chart-card mb"><h3>HackerOne // Top Bug Bounty Programs</h3><div class="chart-wrap"><canvas id="chart-programs"></canvas></div></div>
+
+    <div class="search-bar">
+      <div class="search-group">
+        <span class="s-icon">&#128269;</span>
+        <input class="s-input" id="script-search" placeholder="Search scripts by code, box, purpose...">
+      </div>
+      <select class="f-select" id="script-cat"><option value="">All Categories</option></select>
+      <select class="f-select" id="script-lang"><option value="">All Languages</option></select>
+    </div>
+    <div class="result-count" id="script-count"></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Category</th><th>Box</th><th>Language</th><th>Purposes</th><th>Lines</th><th>Context</th>
+        </tr></thead>
+        <tbody id="script-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="script-pagination"></div>
+  </div>
+
+  <!-- ══════════ ARCHETYPES ══════════ -->
+  <div class="panel" id="panel-archetypes">
+    <p style="color:var(--text-dim);margin-bottom:1.25rem;font-size:.88rem">
+      Attack pattern archetypes extracted from 509 HTB writeups. Each represents a recurring OS + foothold vector + escalation path combination.
+    </p>
+    <div class="grid g3" id="arch-grid">
+      <div class="loading"><div class="spinner"></div><div>Loading archetypes...</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Modal ── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<div class="footer">STRYKR KNOWLEDGE BASE &mdash; FLASK + SQLITE3 BACKEND &mdash; LIVE QUERIES</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
